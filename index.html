@@ -7,11 +7,38 @@
     <title>작업수행능력 평가_2026</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        html {
+            /* iOS에서 가로/세로 전환 시 글자 크기가 임의로 커지는 것을 방지 */
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
         body {
             font-family: 'Arial', sans-serif;
             line-height: 1.6;
             padding: 20px;
+            margin: 0;
             background-color: #f0f2f5;
+        }
+
+        /* 입력 요소가 컨테이너를 넘지 않도록 */
+        input,
+        select,
+        button,
+        canvas {
+            max-width: 100%;
         }
 
         .main-content {
@@ -264,6 +291,7 @@
             top: 0;
             width: 100%;
             height: 100%;
+            height: 100dvh;
             overflow: auto;
             background-color: rgba(0, 0, 0, 0.4);
         }
@@ -280,6 +308,7 @@
             display: flex;
             flex-direction: column;
             max-height: 90vh;
+            max-height: 90dvh;
             position: relative;
         }
 
@@ -314,6 +343,14 @@
             border-bottom: 1px solid #ccc;
             z-index: 1002;
             border-radius: 10px 10px 0 0;
+        }
+
+        .dash-instruction {
+            margin: 8px 0 0 0;
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #333;
+            word-break: keep-all;
         }
 
         /* 스크롤 가능한 설문 영역 */
@@ -458,42 +495,38 @@
             outline-offset: 2px;
         }
 
-        #validation-message {
-            display: none;
-            margin-top: 20px;
-            padding: 15px 18px;
-            border: 2px solid #dc3545;
-            border-radius: 6px;
-            background: #fff5f5;
-            color: #b02a37;
-        }
-
-        #validation-message strong {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 1.05em;
-        }
-
-        #validation-message ul {
-            margin: 0;
-            padding-left: 20px;
-        }
-
-        #validation-message li {
-            margin: 3px 0;
-            font-size: 0.95em;
-        }
-
         .pending {
             color: #888;
             font-weight: normal;
         }
 
         @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+
+            h1 {
+                font-size: 1.35em;
+                word-break: keep-all;
+            }
+
+            /* iOS Safari는 글자 16px 미만인 입력창에 포커스가 가면 화면을 자동 확대한다.
+               확대되는 순간 가로 스크롤이 생기면서 화면이 좌측으로 밀리므로 16px로 맞춘다. */
+            input[type="number"],
+            select,
+            textarea,
+            .input-value input[type="number"],
+            .input-unit input[type="number"],
+            .user-info-group select,
+            .dash-input-value button {
+                font-size: 16px;
+            }
+
             .main-content {
                 flex-direction: column;
                 /* 메인 컨텐츠를 수직으로 배열 */
                 padding: 15px;
+                width: 100%;
             }
 
             /* 결과 영역을 입력 섹션 위로 올리고 마진 조정 */
@@ -725,8 +758,6 @@
                     </div>
                 </div>
 
-                <div id="validation-message" role="alert" aria-live="polite"></div>
-
                 <button onclick="evaluatePerformance()" class="main-eval-button">전체 평가하기</button>
             </div>
 
@@ -753,6 +784,7 @@
 
             <div class="dash-guide">
                 <h2>QuickDASH 설문지 (11문항)</h2>
+                <p class="dash-instruction">지난 1주일 동안의 상태를 기준으로 해당하는 번호를 체크하세요.</p>
                 <p style="font-size: 0.9em; color: #6c757d; margin: 5px 0 0 0;">
                     (1: 어려움 없음, 2: 약간 어려움, 3: 중간 정도 어려움, 4: 심한 어려움, 5: 할 수 없음)
                 </p>
@@ -990,43 +1022,27 @@
             if (detailEl) detailEl.classList.remove('pending');
         }
 
-        // 미입력·비정상 입력 목록 수집
+        // 미입력·비정상 입력 항목 수집
         function collectIssues() {
-            const issues = [];
-            FIELD_SPECS.forEach(f => {
-                const el = document.getElementById(f.id);
-                const raw = el.value.trim();
-                const value = readValue(f.id);
-                if (value !== null) return;
-                if (raw === '') {
-                    issues.push({ group: f.group, id: f.id, text: `${f.label} — 측정값을 입력하세요` });
-                } else if (f.rule === 'positive' && parseFloat(raw) === 0) {
-                    issues.push({ group: f.group, id: f.id, text: `${f.label} — 0은 측정값으로 인정되지 않습니다` });
-                } else {
-                    issues.push({ group: f.group, id: f.id, text: `${f.label} — 숫자를 다시 확인하세요` });
-                }
-            });
+            const issues = FIELD_SPECS
+                .filter(f => readValue(f.id) === null)
+                .map(f => ({ group: f.group, id: f.id }));
             if (!isDASHAnswered) {
-                issues.push({ group: 'dash-input', id: null, text: '8. 건강상태 — QuickDASH 설문 11문항에 모두 응답하세요' });
+                issues.push({ group: 'dash-input', id: null });
             }
             return issues;
         }
 
-        // 안내 표시 / 해제
+        // 미입력 항목을 붉게 표시하고 첫 항목으로 이동 (별도 안내 문구는 두지 않음)
         function markIssues(issues) {
             document.querySelectorAll('.input-group.missing')
                 .forEach(el => el.classList.remove('missing'));
+            if (!issues.length) return;
+
             issues.forEach(i => {
                 const g = document.getElementById(i.group);
                 if (g) g.classList.add('missing');
             });
-
-            const box = document.getElementById('validation-message');
-            if (!issues.length) { box.style.display = 'none'; box.innerHTML = ''; return; }
-
-            box.innerHTML = `<strong>아직 입력되지 않은 항목이 ${issues.length}개 있습니다. 모두 입력해야 평가할 수 있습니다.</strong>` +
-                '<ul>' + issues.map(i => `<li>${i.text}</li>`).join('') + '</ul>';
-            box.style.display = 'block';
 
             const first = issues[0];
             const target = document.getElementById(first.id || first.group);
