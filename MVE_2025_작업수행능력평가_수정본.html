@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>작업수행능력 평가_2026</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+
+        .main-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            gap: 25px;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-section {
+            flex: 2.5;
+        }
+
+        .result-section-container {
+            flex: 1.5;
+            margin-top: 230px;
+        }
+
+        h1 {
+            color: #0056b3;
+            text-align: center;
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 10px;
+            margin-bottom: 20px;            
+        }
+
+        h2 {
+            color: #007bff;
+            margin-top: 25px;
+            border-left: 5px solid #007bff;
+            padding-left: 10px;
+        }
+
+        .user-info-group {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background: #fafafa;
+            display: flex;
+            gap: 20px;
+        }
+
+        .user-info-group>div {
+            flex: 1;
+        }
+
+        .user-info-group label {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .user-info-group select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 15px;
+            width: 70%;
+            box-sizing: border-box;
+        }
+
+        /* 공통 입력 그룹 스타일 */
+        .input-group {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background: #fafafa;
+            display: grid;
+            grid-template-columns: 1.2fr 180px 1.2fr;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-group>label:first-child {
+            grid-column: 1;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+        }
+
+        .input-value {
+            grid-column: 2;
+        }
+
+        .input-value input[type="number"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            width: 40%;
+            box-sizing: border-box;
+            text-align: right;
+            margin-left: auto;
+        }
+        
+        .dash-input-value {
+            grid-column: 2;
+            text-align: center;
+        }
+
+        .dash-input-value button {
+            background: #17a2b8;
+            color: white;
+            padding: 8px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        .dash-input-value button:hover {
+            background: #138496;
+        }
+
+        .input-unit input[type="number"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: right;
+        }
+
+        .score-box {
+            grid-column: 3;
+            padding: 5px;
+            background: #e6f7ff;
+            border: 1px solid #91d5ff;
+            border-radius: 4px;
+            font-size: 0.9em;
+            line-height: 1.3;
+        }
+
+        .score-display {
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .detail-result {
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .dash-score-detail {
+            font-weight: bold;
+            color: #0056b3;
+        }
+
+        /* 설문 점수 강조 */
+
+
+        .complex-input-group .input-column {
+            grid-column: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .complex-input-group .input-unit {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .complex-input-group label[for] {
+            font-weight: normal !important;
+            display: block;
+            margin: 0;
+            font-size: 0.9em;
+            text-align: left;
+        }
+
+
+        button.main-eval-button {
+            background: #28a745;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 18px;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        button.main-eval-button:hover {
+            background: #1e7e34;
+        }
+
+        /* 결과 영역 스타일 */
+        .result {            
+            margin-top: 20px;
+            padding: 25px;
+            border: 3px solid #28a745;
+            border-radius: 8px;
+            background: #d4edda;
+            text-align: center;
+        }
+
+        .result h3 {
+            color: #155724;
+            border-bottom: 1px solid #155724;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+
+        .result p {
+            font-size: 1.1em;
+            margin: 10px 0;
+        }
+
+        .result span {
+            font-size: 1.6em;
+            color: #0056b3;
+            font-weight: bold;
+            display: block;
+            margin-top: 5px;
+        }
+
+        /* 레이더 차트 컨테이너 스타일 */
+        #radar-chart-container {
+            width: 100%;
+            height: 350px;
+            padding: 10px;
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        /* QuickDASH 설문 모달 스타일 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 0;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 700px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh;
+            position: relative;
+        }
+
+        /* 닫기 버튼 위치 수정 및 가시성 확보 */
+        .close {
+            color: #333;
+            background: #fff;
+            padding: 0 10px 0 10px;
+            border-radius: 0 10px 0 0;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 0;
+            right: 0;
+            cursor: pointer;
+            z-index: 1003;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* 고정 안내 영역 스타일 */
+        .dash-guide {
+            position: sticky;
+            top: 0;
+            background-color: #fefefe;
+            padding: 15px 20px 10px 20px;
+            border-bottom: 1px solid #ccc;
+            z-index: 1002;
+            border-radius: 10px 10px 0 0;
+        }
+
+        /* 스크롤 가능한 설문 영역 */
+        #dash-form-container {
+            overflow-y: auto;
+            padding: 10px 20px;
+        }
+
+        /* 질문 항목 스타일 (Flexbox) */
+        .dash-question {
+            margin-bottom: 15px;
+            padding: 10px 0;
+            border-bottom: 1px dotted #ccc;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            padding-left: 15px;
+            transition: background-color 0.3s;
+        }
+
+        /* 답변 완료 시 옅은 녹색 배경 */
+        .dash-question.answered {
+            background-color: #f0fff0;
+            /* 옅은 녹색 */
+            padding-left: 15px;
+        }
+
+        .dash-question label {
+            font-weight: 500;
+            flex: 1;
+            margin: 0;
+            font-size: 0.95em;
+            word-break: keep-all;
+            line-height: 1.4;
+
+            text-indent: -1.2em;
+        }
+
+        .dash-options {
+            flex-shrink: 0;
+            width: 170px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 3px;
+        }
+
+        .dash-opt {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            cursor: pointer;
+            padding: 6px 2px;
+            margin: 0;
+            font-weight: normal;
+        }
+
+        .dash-options input[type="radio"] {
+            margin: 0 2px 0 0;
+            cursor: pointer;
+        }
+
+        .dash-options span {
+            margin-right: 0;
+            font-size: 0.9em;
+        }
+
+        .dash-score-button-container {
+            padding: 15px 20px;
+            border-top: 1px solid #ccc;
+            text-align: right;
+            background-color: #fefefe;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .dash-score-button {
+            background: #ffc107;
+            color: #333;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        /* 미입력 항목 안내 스타일 */
+        .input-group.missing {
+            border: 2px solid #dc3545;
+            background: #fff5f5;
+        }
+
+        .input-group.missing > label:first-child {
+            color: #b02a37;
+        }
+
+        .input-group.missing input[type="number"] {
+            border-color: #dc3545;
+        }
+
+        input[type="number"]:focus-visible,
+        select:focus-visible,
+        button:focus-visible {
+            outline: 3px solid #0056b3;
+            outline-offset: 2px;
+        }
+
+        #validation-message {
+            display: none;
+            margin-top: 20px;
+            padding: 15px 18px;
+            border: 2px solid #dc3545;
+            border-radius: 6px;
+            background: #fff5f5;
+            color: #b02a37;
+        }
+
+        #validation-message strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.05em;
+        }
+
+        #validation-message ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        #validation-message li {
+            margin: 3px 0;
+            font-size: 0.95em;
+        }
+
+        .pending {
+            color: #888;
+            font-weight: normal;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+                /* 메인 컨텐츠를 수직으로 배열 */
+                padding: 15px;
+            }
+
+            /* 결과 영역을 입력 섹션 위로 올리고 마진 조정 */
+            .result-section-container {
+                margin-top: 20px;
+                order: 1;
+                width: 100%;
+            }
+
+            .input-section {
+                order: 0;
+            }
+
+            /* 레이더 차트 컨테이너 높이 조정 */
+            #radar-chart-container {
+                height: 300px;
+            }
+
+            /* 기본 정보 그룹 수직 배열 */
+            .user-info-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .user-info-group select {
+                width: 100%;
+                /* 셀렉트 박스 너비 100%로 확장 */
+            }
+
+            /* 입력 항목 그리드 변경 (레이블/입력값/점수 박스 수직으로) */
+            .input-group {
+                grid-template-columns: 1fr;
+                /* 그리드 1열로 변경 */
+                gap: 5px;
+                padding: 15px;
+            }
+
+            .input-group>label:first-child {
+                grid-column: 1;
+                /* 1열 차지 */
+                margin-bottom: 5px;
+                border-bottom: 1px dotted #ccc;
+                padding-bottom: 5px;
+            }
+
+            .input-value,
+            .dash-input-value {
+                grid-column: 1;
+                /* 1열 차지 */
+                text-align: left;
+            }
+
+            .score-box {
+                grid-column: 1;
+                /* 1열 차지 */
+                margin-top: 10px;
+            }
+
+            /* 복합 입력 그룹 스타일 조정 */
+            .complex-input-group .input-column {
+                grid-column: 1;
+            }
+
+            .complex-input-group .input-unit {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            /* 입력 필드 너비 조정 */
+            .input-value input[type="number"],
+            .input-unit input[type="number"] {
+                width: 100%;
+                margin-left: 0;
+            }
+
+            /* DASH 모달 너비 조정 */
+            .modal-content {
+                width: 95%;
+                margin: 2.5% auto;
+            }
+
+            .dash-options {
+                width: 150px;
+                /* 라디오 버튼 옵션 너비 약간 축소 */
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>작업수행능력 평가 (휴먼에러 과정 일부)</h1>
+
+        <div class="main-content">
+            <div class="input-section">
+                <h2>기본 정보 입력</h2>
+                <div class="user-info-group">
+                    <div>
+                        <label for="gender">▶ 성별:</label>
+                        <select id="gender">
+                            <option value="male">남성</option>
+                            <option value="female">여성</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="age-group">▶ 연령대:</label>
+                        <select id="age-group">
+                            <option value="19-24">19-24세</option>
+                            <option value="25-29">25-29세</option>
+                            <option value="30-34">30-34세</option>
+                            <option value="35-39">35-39세</option>
+                            <option value="40-44">40-44세</option>
+                            <option value="45-49">45-49세</option>
+                            <option value="50-54">50-54세</option>
+                            <option value="55-59">55-59세</option>
+                            <option value="60-64">60-64세</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h2>평가 항목 입력</h2>
+
+                <div class="input-group" id="grip-strength-input">
+                    <label for="grip-strength">1. 악력 (kg):</label>
+                    <div class="input-value">
+                        <input type="number" inputmode="decimal" id="grip-strength" min="0" placeholder="미입력" step="0.1">
+                    </div>
+                    <div class="score-box">
+                        <div class="score-display">평가 점수: <span id="grip-score" class="pending">—</span></div>
+                        <div class="detail-result">기준 대비: <span id="grip-detail" class="pending">—</span></div>
+                    </div>
+                </div>
+
+                <div class="input-group" id="wrist-speed-input">
+                    <label for="wrist-speed">2. 손목-손가락 속도 (횟수):</label>
+                    <div class="input-value">
+                        <input type="number" inputmode="numeric" id="wrist-speed" min="0" placeholder="미입력">
+                    </div>
+                    <div class="score-box">
+                        <div class="score-display">평가 점수: <span id="wrist-speed-score" class="pending">—</span></div>
+                        <div class="detail-result">MVE 점수: <span id="wrist-speed-detail" class="pending">—</span></div>
+                    </div>
+                </div>
+
+                <div class="input-group" id="hand-dexterity-input">
+                    <label for="hand-dexterity">3. 손 기민성 (초):</label>
+                    <div class="input-value">
+                        <input type="number" inputmode="decimal" id="hand-dexterity" min="0" placeholder="미입력" step="0.1">
+                    </div>
+                    <div class="score-box">
+                        <div class="score-display">평가 점수: <span id="hand-dexterity-score" class="pending">—</span></div>
+                        <div class="detail-result">MVE 점수: <span id="hand-dexterity-detail" class="pending">—</span></div>
+                    </div>
+                </div>
+
+                <div class="input-group" id="reaction-time-input">
+                    <label for="reaction-time">4. 반응시간 (ms):</label>
+                    <div class="input-value">
+                        <input type="number" inputmode="numeric" id="reaction-time" min="0" placeholder="미입력">
+                    </div>
+                    <div class="score-box">
+                        <div class="score-display">평가 점수: <span id="reaction-time-score" class="pending">—</span></div>
+                        <div class="detail-result">MVE 점수: <span id="reaction-time-detail" class="pending">—</span></div>
+                    </div>
+                </div>
+
+                <div class="input-group" id="finger-dexterity-input">
+                    <label for="finger-dexterity">5. 손가락 기민성 (횟수):</label>
+                    <div class="input-value">
+                        <input type="number" inputmode="numeric" id="finger-dexterity" min="0" placeholder="미입력">
+                    </div>
+                    <div class="score-box">
+                        <div class="score-display">평가 점수: <span id="finger-dexterity-score" class="pending">—</span></div>
+                        <div class="detail-result">MVE 점수: <span id="finger-dexterity-detail" class="pending">—</span></div>
+                    </div>
+                </div>
+
+                <div class="input-group complex-input-group" id="aiming-input">
+                    <label>6. 조준 능력:</label>
+                    <div class="input-column">
+                        <div class="input-unit">
+                            <label for="aiming-hits">접촉 횟수</label>
+                            <input type="number" inputmode="numeric" id="aiming-hits" min="0" placeholder="미입력">
+                        </div>
+                        <div class="input-unit">
+                            <label for="aiming-time">소요 시간 (초)</label>
+                            <input type="number" inputmode="decimal" id="aiming-time" min="0" placeholder="미입력" step="0.01">
+                        </div>
+                    </div>
+                    <div class="score-box">
+                        <div class="score-display">평가 점수: <span id="aiming-score" class="pending">—</span></div>
+                        <div class="detail-result">MVE 점수: <span id="aiming-detail" class="pending">—</span></div>
+                    </div>
+                </div>
+
+                <div class="input-group complex-input-group" id="coordination-input">
+                    <label>7. 양팔협응:</label>
+                    <div class="input-column">
+                        <div class="input-unit">
+                            <label for="coordination-errors">오류 횟수</label>
+                            <input type="number" inputmode="numeric" id="coordination-errors" min="0" placeholder="미입력">
+                        </div>
+                        <div class="input-unit">
+                            <label for="coordination-time">시간 (초)</label>
+                            <input type="number" inputmode="decimal" id="coordination-time" min="0" placeholder="미입력"
+                                step="0.01">
+                        </div>
+                    </div>
+                    <div class="score-box">
+                        <div class="score-display">평가 점수: <span id="coordination-score" class="pending">—</span></div>
+                        <div class="detail-result">MVE 점수: <span id="coordination-detail" class="pending">—</span></div>
+                    </div>
+                </div>
+
+                <div class="input-group" id="dash-input">
+                    <label>8. 건강상태 (상지부):</label>
+                    <div class="dash-input-value">
+                        <button onclick="showDASHModal()">QuickDASH 설문 시작</button>
+                    </div>
+                    <div class="score-box">
+                        <div class="score-display">평가 점수: <span id="dash-score" class="pending">—</span></div>
+                        <div class="detail-result">설문 점수: <span id="dash-detail" class="dash-score-detail pending">미응답</span></div>
+                    </div>
+                </div>
+
+                <div id="validation-message" role="alert" aria-live="polite"></div>
+
+                <button onclick="evaluatePerformance()" class="main-eval-button">전체 평가하기</button>
+            </div>
+
+            <div class="result-section-container">
+                <div id="radar-chart-container">
+                    <canvas id="mveRadarChart"></canvas>
+                </div>
+
+                <div class="result">
+                    <h3>종합 평가 결과</h3>
+                    <p>종합 점수(평균): <span id="total-score">—</span></p>
+                    <div id="score-breakdown"
+                        style="font-size: 0.9em; color: #333; margin-top: 15px; padding-top: 10px; border-top: 1px dashed #a7c0af; text-align: left;">
+                    </div>
+                    <p>종합 등급: <span id="overall-grade">평가 전</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="DASHModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeDASHModal()">&times;</span>
+
+            <div class="dash-guide">
+                <h2>QuickDASH 설문지 (11문항)</h2>
+                <p style="font-size: 0.9em; color: #6c757d; margin: 5px 0 0 0;">
+                    (1: 어려움 없음, 2: 약간 어려움, 3: 중간 정도 어려움, 4: 심한 어려움, 5: 할 수 없음)
+                </p>
+            </div>
+
+            <div id="dash-form-container">
+                <form id="dash-form">
+                    <div class="dash-question">
+                        <label>1. 밀폐된 용기나 새 단지 뚜껑 열기</label>
+                        <div class="dash-options">
+                            <label class="dash-opt"><input type="radio" name="q1" value="1"><span>1</span></label>
+                            <label class="dash-opt"><input type="radio" name="q1" value="2"><span>2</span></label>
+                            <label class="dash-opt"><input type="radio" name="q1" value="3"><span>3</span></label>
+                            <label class="dash-opt"><input type="radio" name="q1" value="4"><span>4</span></label>
+                            <label class="dash-opt"><input type="radio" name="q1" value="5"><span>5</span></label>
+                        </div>
+                    </div>
+                    <div class="dash-question">
+                        <label>2. 힘든 집안일 하기 (벽청소, 바닥 청소 등)</label>
+                        <div class="dash-options">
+                            <label class="dash-opt"><input type="radio" name="q2" value="1"><span>1</span></label>
+                            <label class="dash-opt"><input type="radio" name="q2" value="2"><span>2</span></label>
+                            <label class="dash-opt"><input type="radio" name="q2" value="3"><span>3</span></label>
+                            <label class="dash-opt"><input type="radio" name="q2" value="4"><span>4</span></label>
+                            <label class="dash-opt"><input type="radio" name="q2" value="5"><span>5</span></label>
+                        </div>
+                    </div>
+                    <div class="dash-question">
+                        <label>3. 쇼핑백이나 서류 가방 들고 가기</label>
+                        <div class="dash-options">
+                            <label class="dash-opt"><input type="radio" name="q3" value="1"><span>1</span></label>
+                            <label class="dash-opt"><input type="radio" name="q3" value="2"><span>2</span></label>
+                            <label class="dash-opt"><input type="radio" name="q3" value="3"><span>3</span></label>
+                            <label class="dash-opt"><input type="radio" name="q3" value="4"><span>4</span></label>
+                            <label class="dash-opt"><input type="radio" name="q3" value="5"><span>5</span></label>
+                        </div>
+                    </div>
+                    <div class="dash-question">
+                        <label>4. 등 닦기 (샤워할 때)</label>
+                        <div class="dash-options">
+                            <label class="dash-opt"><input type="radio" name="q4" value="1"><span>1</span></label>
+                            <label class="dash-opt"><input type="radio" name="q4" value="2"><span>2</span></label>
+                            <label class="dash-opt"><input type="radio" name="q4" value="3"><span>3</span></label>
+                            <label class="dash-opt"><input type="radio" name="q4" value="4"><span>4</span></label>
+                            <label class="dash-opt"><input type="radio" name="q4" value="5"><span>5</span></label>
+                        </div>
+                    </div>
+                    <div class="dash-question">
+                        <label>5. 칼로 음식 자르기</label>
+                        <div class="dash-options">
+                            <label class="dash-opt"><input type="radio" name="q5" value="1"><span>1</span></label>
+                            <label class="dash-opt"><input type="radio" name="q5" value="2"><span>2</span></label>
+                            <label class="dash-opt"><input type="radio" name="q5" value="3"><span>3</span></label>
+                            <label class="dash-opt"><input type="radio" name="q5" value="4"><span>4</span></label>
+                            <label class="dash-opt"><input type="radio" name="q5" value="5"><span>5</span></label>
+                        </div>
+                    </div>
+                    <div class="dash-question">
+                        <label>6. 팔, 어깨, 손에 어느 정도의 힘이나 충격이 가는 여가 활동 (예, 골프, 망치질, 테니스 등)</label>
+                        <div class="dash-options">
+                            <label class="dash-opt"><input type="radio" name="q6" value="1"><span>1</span></label>
+                            <label class="dash-opt"><input type="radio" name="q6" value="2"><span>2</span></label>
+                            <label class="dash-opt"><input type="radio" name="q6" value="3"><span>3</span></label>
+                            <label class="dash-opt"><input type="radio" name="q6" value="4"><span>4</span></label>
+                            <label class="dash-opt"><input type="radio" name="q6" value="5"><span>5</span></label>
+                        </div>
+                    </div>
+                    <div class="dash-question">
+                        <label>7. 지난 주 동안, 당신의 팔, 어깨, 혹은 손의 문제로 인하여 당신의 가족, 친구, 이웃, 또는 다른 모임과의 사회 활동에 어느 정도 지장이
+                            있었습니까?</label>
+                        <div class="dash-options">
+                            <label class="dash-opt"><input type="radio" name="q7" value="1"><span>1</span></label>
+                            <label class="dash-opt"><input type="radio" name="q7" value="2"><span>2</span></label>
+                            <label class="dash-opt"><input type="radio" name="q7" value="3"><span>3</span></label>
+                            <label class="dash-opt"><input type="radio" name="q7" value="4"><span>4</span></label>
+                            <label class="dash-opt"><input type="radio" name="q7" value="5"><span>5</span></label>
+                        </div>
+                    </div>
+                    <div class="dash-question">
+                        <label>8. 지난 주 동안, 당신의 팔, 어깨, 혹은 손의 문제로 인하여 당신의 일이나 일상 활동에 어느 정도 제한을 받았습니까?</label>
+                        <div class="dash-options">
+                            <label class="dash-opt"><input type="radio" name="q8" value="1"><span>1</span></label>
+                            <label class="dash-opt"><input type="radio" name="q8" value="2"><span>2</span></label>
+                            <label class="dash-opt"><input type="radio" name="q8" value="3"><span>3</span></label>
+                            <label class="dash-opt"><input type="radio" name="q8" value="4"><span>4</span></label>
+                            <label class="dash-opt"><input type="radio" name="q8" value="5"><span>5</span></label>
+                        </div>
+                    </div>
+                    <div class="dash-question">
+                        <label>9. 팔. 어깨, 손의 통증</label>
+                        <div class="dash-options">
+                            <label class="dash-opt"><input type="radio" name="q9" value="1"><span>1</span></label>
+                            <label class="dash-opt"><input type="radio" name="q9" value="2"><span>2</span></label>
+                            <label class="dash-opt"><input type="radio" name="q9" value="3"><span>3</span></label>
+                            <label class="dash-opt"><input type="radio" name="q9" value="4"><span>4</span></label>
+                            <label class="dash-opt"><input type="radio" name="q9" value="5"><span>5</span></label>
+                        </div>
+                    </div>
+                    <div class="dash-question">
+                        <label>10. 팔, 어깨, 손의 저린감</label>
+                        <div class="dash-options">
+                            <label class="dash-opt"><input type="radio" name="q10" value="1"><span>1</span></label>
+                            <label class="dash-opt"><input type="radio" name="q10" value="2"><span>2</span></label>
+                            <label class="dash-opt"><input type="radio" name="q10" value="3"><span>3</span></label>
+                            <label class="dash-opt"><input type="radio" name="q10" value="4"><span>4</span></label>
+                            <label class="dash-opt"><input type="radio" name="q10" value="5"><span>5</span></label>
+                        </div>
+                    </div>
+                    <div class="dash-question">
+                        <label>11. 지난 주 동안 팔, 어깨, 손의 통증으로 인하여 잠을 자는데 얼마나 어려움을 겪었습니까?</label>
+                        <div class="dash-options">
+                            <label class="dash-opt"><input type="radio" name="q11" value="1"><span>1</span></label>
+                            <label class="dash-opt"><input type="radio" name="q11" value="2"><span>2</span></label>
+                            <label class="dash-opt"><input type="radio" name="q11" value="3"><span>3</span></label>
+                            <label class="dash-opt"><input type="radio" name="q11" value="4"><span>4</span></label>
+                            <label class="dash-opt"><input type="radio" name="q11" value="5"><span>5</span></label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="dash-score-button-container">
+                <button type="button" class="dash-score-button" onclick="submitDASHScore()">설문 완료 및 점수 계산</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 0. 상수 및 기준표 정의 (변경 없음) ---
+        const MVE_SCORES = {
+            'wrist-speed': [
+                { max: 123, score: 1, grade: "매우 낮음" }, { max: 154, score: 2, grade: "낮음" }, { max: 172, score: 3, grade: "보통" },
+                { max: 185, score: 4, grade: "보통 이상" }, { max: 219, score: 5, grade: "높음" }, { max: Infinity, score: 6, grade: "매우 높음" }
+            ],
+            'reaction-time': [
+                { max: 227, score: 6, grade: "매우 높음" }, { max: 316, score: 5, grade: "높음" }, { max: 395, score: 4, grade: "보통 이상" },
+                { max: 486, score: 3, grade: "보통" }, { max: 697, score: 2, grade: "낮음" }, { max: Infinity, score: 1, grade: "매우 낮음" }
+            ],
+            'hand-dexterity': [
+                { max: 42, score: 6, grade: "매우 높음" }, { max: 51, score: 5, grade: "높음" }, { max: 60, score: 4, grade: "보통 이상" },
+                { max: 75, score: 3, grade: "보통" }, { max: 125, score: 2, grade: "낮음" }, { max: Infinity, score: 1, grade: "매우 낮음" }
+            ],
+            'finger-dexterity': [
+                { max: 16, score: 1, grade: "매우 낮음" }, { max: 25, score: 2, grade: "낮음" }, { max: 28, score: 3, grade: "보통" },
+                { max: 31, score: 4, grade: "보통 이상" }, { max: 35, score: 5, grade: "높음" }, { max: Infinity, score: 6, grade: "매우 높음" }
+            ],
+            'aiming': [
+                { hits_max: 5.99, criteria: [{ time_max: 2.99, score: 6.0 }, { time_max: 6.99, score: 5.5 }, { time_max: 10.99, score: 4.9 }, { time_max: 15.99, score: 4.2 }, { time_max: 28.99, score: 3.5 }, { time_max: Infinity, score: 2.4 }] },
+                { hits_max: 8.99, criteria: [{ time_max: 2.99, score: 5.5 }, { time_max: 6.99, score: 5.0 }, { time_max: 10.99, score: 4.5 }, { time_max: 15.99, score: 3.9 }, { time_max: 28.99, score: 3.2 }, { time_max: Infinity, score: 2.2 }] },
+                { hits_max: 10.99, criteria: [{ time_max: 2.99, score: 4.9 }, { time_max: 6.99, score: 4.5 }, { time_max: 10.99, score: 4.0 }, { time_max: 15.99, score: 3.5 }, { time_max: 28.99, score: 2.8 }, { time_max: Infinity, score: 2.0 }] },
+                { hits_max: 14.99, criteria: [{ time_max: 2.99, score: 4.2 }, { time_max: 6.99, score: 3.9 }, { time_max: 10.99, score: 3.5 }, { time_max: 15.99, score: 3.0 }, { time_max: 28.99, score: 2.4 }, { time_max: Infinity, score: 1.7 }] },
+                { hits_max: 24.99, criteria: [{ time_max: 2.99, score: 3.5 }, { time_max: 6.99, score: 3.2 }, { time_max: 10.99, score: 2.8 }, { time_max: 15.99, score: 2.4 }, { time_max: 28.99, score: 2.0 }, { time_max: Infinity, score: 1.4 }] },
+                { hits_max: Infinity, criteria: [{ time_max: 2.99, score: 2.4 }, { time_max: 6.99, score: 2.2 }, { time_max: 10.99, score: 2.0 }, { time_max: 15.99, score: 1.7 }, { time_max: 28.99, score: 1.4 }, { time_max: Infinity, score: 1.0 }] }
+            ],
+            // [확인 완료] 양팔협응 기준표는 원본 판단 시트와 대조하여 검증된 값임.
+            // 시간 첫 구간(1~3, 최대 3.99)과 점수 배열은 시트 그대로이며,
+            // 조준 능력 표와 대칭이 아닌 것은 오류가 아니므로 임의로 수정하지 말 것.
+            'coordination': [
+                { errors: 0.99, criteria: [{ time_max: 3.99, score: 6.0 }, { time_max: 70.99, score: 5.5 }, { time_max: 95.99, score: 4.5 }, { time_max: 125.99, score: 3.9 }, { time_max: 215.99, score: 3.2 }, { time_max: Infinity, score: 2.2 }] },
+                { errors: 1.99, criteria: [{ time_max: 3.99, score: 5.5 }, { time_max: 70.99, score: 5.0 }, { time_max: 95.99, score: 4.5 }, { time_max: 125.99, score: 3.9 }, { time_max: 215.99, score: 3.2 }, { time_max: Infinity, score: 2.2 }] },
+                { errors: 2.99, criteria: [{ time_max: 3.99, score: 4.9 }, { time_max: 70.99, score: 4.0 }, { time_max: 95.99, score: 4.0 }, { time_max: 125.99, score: 3.5 }, { time_max: 215.99, score: 2.8 }, { time_max: Infinity, score: 2.0 }] },
+                { errors: 7.99, criteria: [{ time_max: 3.99, score: 4.2 }, { time_max: 70.99, score: 3.9 }, { time_max: 95.99, score: 3.5 }, { time_max: 125.99, score: 3.0 }, { time_max: 215.99, score: 2.4 }, { time_max: Infinity, score: 1.7 }] },
+                { errors: 30.99, criteria: [{ time_max: 3.99, score: 3.5 }, { time_max: 70.99, score: 3.5 }, { time_max: 95.99, score: 2.8 }, { time_max: 125.99, score: 2.4 }, { time_max: 215.99, score: 2.0 }, { time_max: Infinity, score: 1.4 }] },
+                { errors: Infinity, criteria: [{ time_max: 3.99, score: 2.4 }, { time_max: 70.99, score: 2.4 }, { time_max: 95.99, score: 2.0 }, { time_max: 125.99, score: 1.7 }, { time_max: 215.99, score: 1.4 }, { time_max: Infinity, score: 1.0 }] }
+            ]
+        };
+        const GRIP_STRENGTH_STANDARDS = {
+            'male': { '19-24': 45.3, '25-29': 47.2, '30-34': 48.1, '35-39': 48.0, '40-44': 47.7, '45-49': 46.1, '50-54': 44.6, '55-59': 42.7, '60-64': 41.4, },
+            'female': { '19-24': 27.5, '25-29': 27.7, '30-34': 27.8, '35-39': 28.0, '40-44': 27.9, '45-49': 27.7, '50-54': 26.7, '55-59': 26.3, '60-64': 25.5, }
+        };
+
+        // 2~5번 항목의 정량 평가 기준 (MVE 경계값 기반)
+        const QUANTITATIVE_SCORING_STANDARDS = {
+            'wrist-speed': { type: 'DIRECT', max_perf: 220, base_perf: 123 },
+            'hand-dexterity': { type: 'INVERSE', max_perf: 42, base_perf: 125 },
+            'reaction-time': { type: 'INVERSE', max_perf: 227, base_perf: 697 },
+            'finger-dexterity': { type: 'DIRECT', max_perf: 36, base_perf: 16 },
+        };
+        const BASE_SCORE_MIN = 20; // 최소 점수
+        const SCORE_RANGE = 80;    // 점수 범위 (100 - 20)
+
+        // --- 전역 변수 (차트 데이터 및 인스턴스) ---
+        let MVE_DATA_FOR_CHART = {
+            'grip': 0.0, 'wrist-speed': 1.0, 'hand-dexterity': 1.0, 'reaction-time': 1.0,
+            'finger-dexterity': 1.0, 'aiming': 1.0, 'coordination': 1.0, 'dash': 0.0
+        };
+        let mveRadarChartInstance = null;
+        let lastDASHScore100 = 0.0; // DASH 100점 척도 점수 저장 (0:양호, 100:불량)
+        let isDASHAnswered = false;
+
+        // --- 입력 검증 정의 -------------------------------------------------
+        // rule: 'positive' = 0보다 커야 유효한 측정값
+        //       'zero'     = 0도 유효한 측정값(0회 = 오류/접촉 없음)
+        const FIELD_SPECS = [
+            { id: 'grip-strength',       group: 'grip-strength-input',   label: '1. 악력 (kg)',                  rule: 'positive' },
+            { id: 'wrist-speed',         group: 'wrist-speed-input',     label: '2. 손목-손가락 속도 (횟수)',     rule: 'positive' },
+            { id: 'hand-dexterity',      group: 'hand-dexterity-input',  label: '3. 손 기민성 (초)',              rule: 'positive' },
+            { id: 'reaction-time',       group: 'reaction-time-input',   label: '4. 반응시간 (ms)',               rule: 'positive' },
+            { id: 'finger-dexterity',    group: 'finger-dexterity-input',label: '5. 손가락 기민성 (횟수)',        rule: 'positive' },
+            { id: 'aiming-hits',         group: 'aiming-input',          label: '6. 조준 능력 – 접촉 횟수',       rule: 'zero' },
+            { id: 'aiming-time',         group: 'aiming-input',          label: '6. 조준 능력 – 소요 시간 (초)',  rule: 'positive' },
+            { id: 'coordination-errors', group: 'coordination-input',    label: '7. 양팔협응 – 오류 횟수',        rule: 'zero' },
+            { id: 'coordination-time',   group: 'coordination-input',    label: '7. 양팔협응 – 시간 (초)',        rule: 'positive' }
+        ];
+        const FIELD_RULES = {};
+        FIELD_SPECS.forEach(f => { FIELD_RULES[f.id] = f.rule; });
+
+        // 입력값 읽기: 미입력·비정상값이면 null 반환 (0점으로 산입하지 않음)
+        function readValue(id) {
+            const el = document.getElementById(id);
+            if (!el) return null;
+            const raw = el.value.trim();
+            if (raw === '') return null;
+            const v = parseFloat(raw);
+            if (!isFinite(v)) return null;
+            if (v < 0) return null;
+            if (FIELD_RULES[id] === 'positive' && v <= 0) return null;
+            return v;
+        }
+
+        // 미입력 항목의 점수칸을 '—'로 표시하고 차트값을 비움
+        function setPending(chartKey, scoreId, detailId) {
+            MVE_DATA_FOR_CHART[chartKey] = 0.0;
+            const scoreEl = document.getElementById(scoreId);
+            const detailEl = document.getElementById(detailId);
+            if (scoreEl) { scoreEl.textContent = '—'; scoreEl.classList.add('pending'); }
+            if (detailEl) { detailEl.textContent = '—'; detailEl.classList.add('pending'); }
+            return null;
+        }
+
+        function setFilled(scoreId, detailId) {
+            const scoreEl = document.getElementById(scoreId);
+            const detailEl = document.getElementById(detailId);
+            if (scoreEl) scoreEl.classList.remove('pending');
+            if (detailEl) detailEl.classList.remove('pending');
+        }
+
+        // 미입력·비정상 입력 목록 수집
+        function collectIssues() {
+            const issues = [];
+            FIELD_SPECS.forEach(f => {
+                const el = document.getElementById(f.id);
+                const raw = el.value.trim();
+                const value = readValue(f.id);
+                if (value !== null) return;
+                if (raw === '') {
+                    issues.push({ group: f.group, id: f.id, text: `${f.label} — 측정값을 입력하세요` });
+                } else if (f.rule === 'positive' && parseFloat(raw) === 0) {
+                    issues.push({ group: f.group, id: f.id, text: `${f.label} — 0은 측정값으로 인정되지 않습니다` });
+                } else {
+                    issues.push({ group: f.group, id: f.id, text: `${f.label} — 숫자를 다시 확인하세요` });
+                }
+            });
+            if (!isDASHAnswered) {
+                issues.push({ group: 'dash-input', id: null, text: '8. 건강상태 — QuickDASH 설문 11문항에 모두 응답하세요' });
+            }
+            return issues;
+        }
+
+        // 안내 표시 / 해제
+        function markIssues(issues) {
+            document.querySelectorAll('.input-group.missing')
+                .forEach(el => el.classList.remove('missing'));
+            issues.forEach(i => {
+                const g = document.getElementById(i.group);
+                if (g) g.classList.add('missing');
+            });
+
+            const box = document.getElementById('validation-message');
+            if (!issues.length) { box.style.display = 'none'; box.innerHTML = ''; return; }
+
+            box.innerHTML = `<strong>아직 입력되지 않은 항목이 ${issues.length}개 있습니다. 모두 입력해야 평가할 수 있습니다.</strong>` +
+                '<ul>' + issues.map(i => `<li>${i.text}</li>`).join('') + '</ul>';
+            box.style.display = 'block';
+
+            const first = issues[0];
+            const target = document.getElementById(first.id || first.group);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                if (first.id) setTimeout(() => target.focus({ preventScroll: true }), 300);
+            }
+        }
+
+        // 결과 영역 초기화
+        function resetResult() {
+            document.getElementById('total-score').textContent = '—';
+            document.getElementById('overall-grade').textContent = '평가 전';
+            document.getElementById('score-breakdown').innerHTML = '';
+            document.getElementById('radar-chart-container').style.display = 'none';
+        }
+
+        function mveToScore100(mveScore) {
+            return Math.round(((mveScore - 1) / 5) * SCORE_RANGE + BASE_SCORE_MIN);
+        }
+
+        function getMVEGrade(mveScore) {
+            if (mveScore >= 5.5) return "매우 높음";
+            if (mveScore >= 4.5) return "높음";
+            if (mveScore >= 3.5) return "보통 이상";
+            if (mveScore >= 2.5) return "보통";
+            if (mveScore >= 1.5) return "낮음";
+            if (mveScore >= 1.0) return "매우 낮음";
+            return "평가 오류";
+        }
+
+        // --- DASH 설문 관련 함수 (변경 없음) ---
+
+        // DASH 설문 모달 열기
+        function showDASHModal() {
+            document.getElementById('DASHModal').style.display = 'block';
+        }
+
+        // DASH 설문 모달 닫기
+        function closeDASHModal() {
+            document.getElementById('DASHModal').style.display = 'none';
+        }
+
+        // DASH 점수 UI 업데이트 (MVE 척도로)
+        function displayDashMVE(mveScore, finalScore100) {
+            const mveGrade = getMVEGrade(mveScore);
+            // '설문 점수' 복원/유지 확인
+            document.querySelector('#dash-input .detail-result').innerHTML =
+                `설문 점수: <span id="dash-detail" class="dash-score-detail">${mveScore.toFixed(1)}점 (${mveGrade})</span>`;
+            // DASH 100점 척도 점수 (0이 좋음)를 일반 평가 점수 (100이 좋음)로 변환
+            const score100 = 100 - finalScore100;
+            const scoreEl = document.getElementById('dash-score');
+            scoreEl.textContent = `${Math.round(score100)}점`;
+            scoreEl.classList.remove('pending');
+            document.getElementById('dash-detail').classList.remove('pending');
+            const dashGroup = document.getElementById('dash-input');
+            if (dashGroup) dashGroup.classList.remove('missing');
+        }
+
+
+        function submitDASHScore() {
+            const form = document.getElementById('dash-form');
+            let sumOfScores = 0;
+
+            for (let i = 1; i <= 11; i++) {
+                const checkedRadio = form.querySelector(`input[name="q${i}"]:checked`);
+                if (!checkedRadio) {
+                    alert('모든 11개 문항에 답변해주세요.');
+                    return;
+                }
+                sumOfScores += parseInt(checkedRadio.value, 10);
+            }
+
+            const averageScore = sumOfScores / 11; // answeredCount 제거, 고정값 11 사용
+            const quickDASHScore = (averageScore - 1) * 25;
+            const finalScore = parseFloat(quickDASHScore.toFixed(1));
+
+            lastDASHScore100 = finalScore;
+            isDASHAnswered = true; // 추가: 응답 완료 플래그 설정
+
+            let mveScore = 6.0 - (finalScore / 100.0 * 5.0);
+            mveScore = Math.max(1.0, mveScore);
+            mveScore = parseFloat(mveScore.toFixed(1));
+
+            MVE_DATA_FOR_CHART['dash'] = mveScore;
+            displayDashMVE(mveScore, finalScore);
+
+            closeDASHModal();
+        }
+
+        function updateDASHScoreEvaluation() {
+            if (!isDASHAnswered) {
+                MVE_DATA_FOR_CHART['dash'] = 0.0;
+                const scoreEl = document.getElementById('dash-score');
+                const detailEl = document.getElementById('dash-detail');
+                if (scoreEl) { scoreEl.textContent = '—'; scoreEl.classList.add('pending'); }
+                if (detailEl) { detailEl.textContent = '미응답'; detailEl.classList.add('pending'); }
+                return null; // 미응답: 평균 계산 대상에서 제외 (평가 자체가 차단됨)
+            }
+
+            const finalScore = lastDASHScore100; // 0-100 scale
+
+            // MVE 6점 척도 계산
+            let mveScore = 6.0 - (finalScore / 100.0 * 5.0);
+            mveScore = Math.max(1.0, mveScore);
+            mveScore = parseFloat(mveScore.toFixed(1));
+            MVE_DATA_FOR_CHART['dash'] = mveScore;
+
+            // UI 업데이트
+            displayDashMVE(mveScore, finalScore);
+
+            // 최종 평가에 반영할 100점 만점 점수 (100이 좋음)
+            return Math.round(100 - finalScore);
+        }
+
+        // --- 기존 코드에서 calculateGripScore 함수를 아래 코드로 대체 ---
+
+        function calculateGripScore(gripValue, gender, ageGroup) {
+            const averageGrip = GRIP_STRENGTH_STANDARDS[gender]?.[ageGroup];
+            let score = 0;
+            let percent = 0;
+
+            if (!averageGrip || averageGrip === 0) {
+                document.getElementById('grip-detail').textContent = "기준 없음/오류";
+                MVE_DATA_FOR_CHART['grip'] = 0.0;
+                return 0;
+            }
+
+            // 1. 점수 계산 (연속형, 100점 상한 적용)
+            percent = (gripValue / averageGrip) * 100; // 백분율 (100% 초과 가능)
+            score = Math.round(Math.min(percent, 100)); // 점수: 100을 상한으로 적용 후 반올림
+
+            // 2. MVE 6점 척도 계산 (레이더 차트용)
+            // - 악력 점수(0~100)를 MVE 척도(0~6)로 변환
+            // - 0점 -> MVE 0.0 (미측정), 40점 -> MVE 3.0, 60점 -> MVE 4.0, 80점 -> MVE 5.0, 100점 -> MVE 6.0
+            // - 0점 초과 시 (점수 / 20) + 1 로 변환
+            let mveScore = score === 0 ? 0.0 : (score / 20.0) + 1.0;
+            mveScore = parseFloat(mveScore.toFixed(1));
+
+            // 3. UI 업데이트 및 반환
+            MVE_DATA_FOR_CHART['grip'] = mveScore;
+            document.getElementById('grip-detail').textContent = `${averageGrip.toFixed(1)}kg 대비 ${percent.toFixed(1)}%`;
+
+            return score; // 0~100점 사이의 연속형 점수 반환
+        }
+        function calculateWristSpeedScore(speedValue) {
+            const criteria = MVE_SCORES['wrist-speed'];
+            let mveScore = 1;
+            for (const item of criteria) {
+                if (speedValue <= item.max) { mveScore = item.score; break; }
+            }
+            document.getElementById('wrist-speed-detail').textContent = `${mveScore.toFixed(1)}점 (${criteria.find(i => i.score === mveScore).grade})`;
+            MVE_DATA_FOR_CHART['wrist-speed'] = mveScore;
+            const { max_perf, base_perf } = QUANTITATIVE_SCORING_STANDARDS['wrist-speed'];
+            let score100;
+            if (speedValue <= base_perf) { score100 = BASE_SCORE_MIN; }
+            else if (speedValue >= max_perf) { score100 = BASE_SCORE_MIN + SCORE_RANGE; }
+            else { score100 = BASE_SCORE_MIN + ((speedValue - base_perf) / (max_perf - base_perf)) * SCORE_RANGE; }
+            return Math.round(score100);
+        }
+
+        function calculateHandDexterityScore(timeValue) {
+            const criteria = MVE_SCORES['hand-dexterity'];
+            let mveScore = 1;
+            for (const item of criteria) {
+                if (timeValue <= item.max) { mveScore = item.score; break; }
+            }
+            document.getElementById('hand-dexterity-detail').textContent = `${mveScore.toFixed(1)}점 (${criteria.find(i => i.score === mveScore).grade})`;
+            MVE_DATA_FOR_CHART['hand-dexterity'] = mveScore;
+            const { max_perf, base_perf } = QUANTITATIVE_SCORING_STANDARDS['hand-dexterity'];
+            let score100;
+            if (timeValue >= base_perf) { score100 = BASE_SCORE_MIN; }
+            else if (timeValue <= max_perf) { score100 = BASE_SCORE_MIN + SCORE_RANGE; }
+            else { score100 = BASE_SCORE_MIN + ((base_perf - timeValue) / (base_perf - max_perf)) * SCORE_RANGE; }
+            return Math.round(score100);
+        }
+
+        function calculateReactionTimeScore(timeValue) {
+            const criteria = MVE_SCORES['reaction-time'];
+            let mveScore = 1;
+            for (const item of criteria) {
+                if (timeValue <= item.max) { mveScore = item.score; break; }
+            }
+            document.getElementById('reaction-time-detail').textContent = `${mveScore.toFixed(1)}점 (${criteria.find(i => i.score === mveScore).grade})`;
+            MVE_DATA_FOR_CHART['reaction-time'] = mveScore;
+            const { max_perf, base_perf } = QUANTITATIVE_SCORING_STANDARDS['reaction-time'];
+            let score100;
+            if (timeValue >= base_perf) { score100 = BASE_SCORE_MIN; }
+            else if (timeValue <= max_perf) { score100 = BASE_SCORE_MIN + SCORE_RANGE; }
+            else { score100 = BASE_SCORE_MIN + ((base_perf - timeValue) / (base_perf - max_perf)) * SCORE_RANGE; }
+            return Math.round(score100);
+        }
+
+        function calculateFingerDexterityScore(countValue) {
+            const criteria = MVE_SCORES['finger-dexterity'];
+            let mveScore = 1;
+            for (const item of criteria) {
+                if (countValue <= item.max) { mveScore = item.score; break; }
+            }
+            document.getElementById('finger-dexterity-detail').textContent = `${mveScore.toFixed(1)}점 (${criteria.find(i => i.score === mveScore).grade})`;
+            MVE_DATA_FOR_CHART['finger-dexterity'] = mveScore;
+            const { max_perf, base_perf } = QUANTITATIVE_SCORING_STANDARDS['finger-dexterity'];
+            let score100;
+            if (countValue <= base_perf) { score100 = BASE_SCORE_MIN; }
+            else if (countValue >= max_perf) { score100 = BASE_SCORE_MIN + SCORE_RANGE; }
+            else { score100 = BASE_SCORE_MIN + ((countValue - base_perf) / (max_perf - base_perf)) * SCORE_RANGE; }
+            return Math.round(score100);
+        }
+
+        function calculateAimingScore(hits, time) {
+            const criteriaGroup = MVE_SCORES['aiming'];
+            let targetGroup = criteriaGroup[0];
+            for (const group of criteriaGroup) {
+                if (hits <= group.hits_max) { targetGroup = group; break; }
+            }
+            let mveScore = 1.0;
+            for (const item of targetGroup.criteria) {
+                if (time <= item.time_max) { mveScore = item.score; break; }
+            }
+            const mveGrade = getMVEGrade(mveScore);
+            document.getElementById('aiming-detail').textContent = `${mveScore.toFixed(1)}점 (${mveGrade})`;
+            MVE_DATA_FOR_CHART['aiming'] = mveScore;
+            return mveToScore100(mveScore);
+        }
+
+        function calculateCoordinationScore(time, errors) {
+            const criteriaGroup = MVE_SCORES['coordination'];
+            let targetGroup = criteriaGroup[criteriaGroup.length - 1];
+            if (errors <= 0.99) { targetGroup = criteriaGroup[0]; }
+            else if (errors <= 1.99) { targetGroup = criteriaGroup[1]; }
+            else if (errors <= 2.99) { targetGroup = criteriaGroup[2]; }
+            else if (errors <= 7.99) { targetGroup = criteriaGroup[3]; }
+            else if (errors <= 30.99) { targetGroup = criteriaGroup[4]; }
+            let mveScore = 1.0;
+            for (const item of targetGroup.criteria) {
+                if (time <= item.time_max) { mveScore = item.score; break; }
+            }
+            const mveGrade = getMVEGrade(mveScore);
+            document.getElementById('coordination-detail').textContent = `${mveScore.toFixed(1)}점 (${mveGrade})`;
+            MVE_DATA_FOR_CHART['coordination'] = mveScore;
+            return mveToScore100(mveScore);
+        }
+
+        // --- 개별 항목 평가 및 업데이트 함수 (차트 데이터만 저장) ---
+        function updateGripEvaluation() {
+            const gripValue = readValue('grip-strength');
+            if (gripValue === null) return setPending('grip', 'grip-score', 'grip-detail');
+            const gender = document.getElementById('gender').value;
+            const ageGroup = document.getElementById('age-group').value;
+            const score = calculateGripScore(gripValue, gender, ageGroup);
+            document.getElementById('grip-score').textContent = `${score}점`;
+            setFilled('grip-score', 'grip-detail');
+            return score;
+        }
+        function updateWristSpeedEvaluation() {
+            const speedValue = readValue('wrist-speed');
+            if (speedValue === null) return setPending('wrist-speed', 'wrist-speed-score', 'wrist-speed-detail');
+            const score100 = calculateWristSpeedScore(speedValue);
+            document.getElementById('wrist-speed-score').textContent = `${score100}점`;
+            setFilled('wrist-speed-score', 'wrist-speed-detail');
+            return score100;
+        }
+        function updateHandDexterityEvaluation() {
+            const timeValue = readValue('hand-dexterity');
+            if (timeValue === null) return setPending('hand-dexterity', 'hand-dexterity-score', 'hand-dexterity-detail');
+            const score100 = calculateHandDexterityScore(timeValue);
+            document.getElementById('hand-dexterity-score').textContent = `${score100}점`;
+            setFilled('hand-dexterity-score', 'hand-dexterity-detail');
+            return score100;
+        }
+        function updateReactionTimeEvaluation() {
+            const timeValue = readValue('reaction-time');
+            if (timeValue === null) return setPending('reaction-time', 'reaction-time-score', 'reaction-time-detail');
+            const score100 = calculateReactionTimeScore(timeValue);
+            document.getElementById('reaction-time-score').textContent = `${score100}점`;
+            setFilled('reaction-time-score', 'reaction-time-detail');
+            return score100;
+        }
+        function updateFingerDexterityEvaluation() {
+            const countValue = readValue('finger-dexterity');
+            if (countValue === null) return setPending('finger-dexterity', 'finger-dexterity-score', 'finger-dexterity-detail');
+            const score100 = calculateFingerDexterityScore(countValue);
+            document.getElementById('finger-dexterity-score').textContent = `${score100}점`;
+            setFilled('finger-dexterity-score', 'finger-dexterity-detail');
+            return score100;
+        }
+        function updateAimingEvaluation() {
+            const hits = readValue('aiming-hits');
+            const time = readValue('aiming-time');
+            if (hits === null || time === null) return setPending('aiming', 'aiming-score', 'aiming-detail');
+            const score100 = calculateAimingScore(hits, time);
+            document.getElementById('aiming-score').textContent = `${score100}점`;
+            setFilled('aiming-score', 'aiming-detail');
+            return score100;
+        }
+        function updateCoordinationEvaluation() {
+            const time = readValue('coordination-time');
+            const errors = readValue('coordination-errors');
+            if (time === null || errors === null) return setPending('coordination', 'coordination-score', 'coordination-detail');
+            const score100 = calculateCoordinationScore(time, errors);
+            document.getElementById('coordination-score').textContent = `${score100}점`;
+            setFilled('coordination-score', 'coordination-detail');
+            return score100;
+        }
+
+        // --- 레이더 차트 그리기 함수 (라벨에서 번호 제거 및 제목 폰트 수정) ---
+        function drawRadarChart() {
+            const chartContainer = document.getElementById('radar-chart-container');
+            chartContainer.style.display = 'block';
+
+            const ctx = document.getElementById('mveRadarChart').getContext('2d');
+            const data = [
+                MVE_DATA_FOR_CHART['grip'],
+                MVE_DATA_FOR_CHART['wrist-speed'],
+                MVE_DATA_FOR_CHART['hand-dexterity'],
+                MVE_DATA_FOR_CHART['reaction-time'],
+                MVE_DATA_FOR_CHART['finger-dexterity'],
+                MVE_DATA_FOR_CHART['aiming'],
+                MVE_DATA_FOR_CHART['coordination'],
+                MVE_DATA_FOR_CHART['dash'] 
+            ];
+
+            // 라벨에서 항목 번호 제거
+            const labels = [
+                '악력', '손목-손가락 속도', '손 기민성',
+                '반응시간', '손가락 기민성', '조준 능력',
+                '양팔협응', '건강상태' 
+            ];
+
+            if (mveRadarChartInstance) {
+                mveRadarChartInstance.data.datasets[0].data = data;
+                mveRadarChartInstance.update();
+                return;
+            }
+
+            // 차트 인스턴스 생성
+            mveRadarChartInstance = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'MVE 6점 척도 점수',
+                        data: data,
+                        backgroundColor: 'rgba(0, 123, 255, 0.2)',
+                        borderColor: 'rgba(0, 123, 255, 1)',
+                        pointBackgroundColor: 'rgba(0, 123, 255, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(0, 123, 255, 1)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 6,
+                            pointLabels: { font: { size: 14, weight: 'bold' } },
+                            ticks: { stepSize: 1, backdropColor: 'rgba(255, 255, 255, 0.7)' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },                        
+                        title: { display: true, text: '항목별 작업수행능력', font: { size: 20, weight: 'bold' } }
+                    }
+                }
+            });
+        }
+
+        // --- 기존 evaluatePerformance() 함수를 아래 코드로 대체 ---
+
+        function evaluatePerformance() {
+            // 0. 입력 검증 — 미입력 항목이 하나라도 있으면 평가하지 않고 입력을 안내
+            const issues = collectIssues();
+            markIssues(issues);
+            if (issues.length > 0) {
+                resetResult();
+                return;
+            }
+
+            // 1. 모든 항목의 점수 및 MVE 데이터 계산/업데이트
+            const scores = [
+                updateGripEvaluation(),
+                updateWristSpeedEvaluation(),
+                updateHandDexterityEvaluation(),
+                updateReactionTimeEvaluation(),
+                updateFingerDexterityEvaluation(),
+                updateAimingEvaluation(),
+                updateCoordinationEvaluation(),
+                updateDASHScoreEvaluation() 
+            ];
+
+            // 2. 종합 점수 및 등급 계산 (검증을 통과했으므로 8개 항목 모두 유효)
+            if (scores.some(v => v === null || !isFinite(v))) {
+                markIssues(collectIssues());
+                resetResult();
+                return;
+            }
+            const totalSum = scores.reduce((a, b) => a + b, 0); // 점수 총합 계산
+            const totalScore = Math.round(totalSum / scores.length);
+
+            document.getElementById('total-score').textContent = `${totalScore}점`;
+
+            // 합산 문자열 생성: 38 + 30 + 90 + ...
+            const scoreString = scores.join(' + ');
+
+            const breakdownContent = `
+        <div style="margin-bottom: 5px; font-weight: bold;">총점 계산 결과 (${scores.length}개 항목):</div>
+        <div style="word-break: break-all;">${scoreString} </div>
+        <div style="word-break: break-all;">= ${totalSum}점</div>
+        <div style="margin-top: 5px; font-weight: bold;">평균 점수: ${totalSum} / ${scores.length} = ${totalScore}점</div>
+    `;
+
+            document.getElementById('score-breakdown').innerHTML = breakdownContent;            
+
+            let grade = "미흡";
+            if (totalScore >= 90) { grade = "최우수"; }
+            else if (totalScore >= 75) { grade = "우수"; }
+            else if (totalScore >= 60) { grade = "보통"; }
+
+            document.getElementById('overall-grade').textContent = grade;
+            
+            drawRadarChart();
+        }
+
+        // DASH 설문 답변 시 배경색 변경 리스너
+        function attachDASHListeners() {
+            const dashForm = document.getElementById('dash-form');
+            if (dashForm) {
+                dashForm.addEventListener('change', (event) => {
+                    if (event.target.type === 'radio' && event.target.name.startsWith('q')) {
+                        // 선택된 라디오 버튼의 가장 가까운 부모 .dash-question 요소를 찾습니다.
+                        const questionDiv = event.target.closest('.dash-question');
+                        if (questionDiv) {
+                            // 해당 질문에 'answered' 클래스 추가하여 배경색 변경
+                            questionDiv.classList.add('answered');
+                        }
+                        // 제출 이후 답변을 바꾸면 이전 점수를 무효화하고 재제출을 요구
+                        if (isDASHAnswered) {
+                            isDASHAnswered = false;
+                            lastDASHScore100 = 0.0;
+                            updateDASHScoreEvaluation();
+                        }
+                    }
+                });
+            }
+        }
+
+        // --- 이벤트 리스너 설정 (실시간 점수 표시만 유지) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const updateIndividualScores = () => {
+                updateGripEvaluation();
+                updateWristSpeedEvaluation();
+                updateHandDexterityEvaluation();
+                updateReactionTimeEvaluation();
+                updateFingerDexterityEvaluation();
+                updateAimingEvaluation();
+                updateCoordinationEvaluation();
+                updateDASHScoreEvaluation();
+            };
+            
+            // 값이 채워지면 해당 항목의 경고 표시를 즉시 해제
+            const clearIssueHighlight = (element) => {
+                const spec = FIELD_SPECS.find(f => f.id === element.id);
+                if (!spec) return;
+                const group = document.getElementById(spec.group);
+                if (!group || !group.classList.contains('missing')) return;
+                const stillMissing = FIELD_SPECS
+                    .filter(f => f.group === spec.group)
+                    .some(f => readValue(f.id) === null);
+                if (!stillMissing) group.classList.remove('missing');
+            };
+
+            const inputElements = document.querySelectorAll('input[type="number"], select');
+            inputElements.forEach(element => {
+                const handler = () => {
+                    updateIndividualScores();
+                    clearIssueHighlight(element);
+                };
+                element.addEventListener('input', handler);
+                element.addEventListener('change', handler);
+            });
+
+            // DASH 설문 문항 리스너 추가
+            attachDASHListeners();
+
+            updateIndividualScores();
+        });
+    </script>
+</body>
+
+</html>
